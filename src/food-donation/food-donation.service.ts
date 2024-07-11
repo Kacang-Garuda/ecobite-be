@@ -147,6 +147,16 @@ export class FoodDonationService {
         )
       }
 
+      const transaction = await prisma.transaction.findFirst({
+        where: { recipientEmail: user.email, foodDonationId: foodDonation.id },
+      })
+
+      if (transaction) {
+        throw new ConflictException(
+          'Anda tidak dapat memesan donasi yang sama!'
+        )
+      }
+
       await prisma.transaction.create({
         data: {
           recipientEmail: user.email,
