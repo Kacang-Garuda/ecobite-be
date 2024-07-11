@@ -8,9 +8,10 @@ import { AuthModule } from './auth/auth.module'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from './auth/auth.guard'
 import { HttpExceptionFilter } from './common/filters/http-exception.filter'
+import { FoodDonationModule } from './food-donation/food-donation.module';
 
 @Module({
-  imports: [PrismaModule, CommonModule, MailerModule, AuthModule],
+  imports: [PrismaModule, CommonModule, MailerModule, AuthModule, FoodDonationModule],
   controllers: [AppController],
   providers: [
     AppService,

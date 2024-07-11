@@ -48,7 +48,7 @@ model Token {
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz()
 
-  userEmail String 
+  userEmail String
   user      User   @relation(fields: [userEmail], references: [email])
 }
 
@@ -62,22 +62,41 @@ enum CATEGORY {
 }
 
 model FoodDonation {
-  id            String   @id @default(uuid())
-  title         String
-  description   String
-  category      CATEGORY
-  isInstitution Boolean
-  imageUrl      String
-  quantity      Int
-  expiredDate   DateTime @db.Timestamptz()
-  instruction   String
-  location      String
-  createdAt     DateTime @default(now()) @db.Timestamptz()
-  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz()
+  id                String   @id @default(uuid())
+  title             String
+  description       String
+  category          CATEGORY
+  isInstitution     Boolean
+  imageUrl          String
+  quantity          Int
+  remainingQuantity Int
+  expiredDate       DateTime @db.Timestamptz()
+  instruction       String
+  location          String
+  createdAt         DateTime @default(now()) @db.Timestamptz()
+  updatedAt         DateTime @default(now()) @updatedAt @db.Timestamptz()
 
   userEmail    String
-  user         User          @relation(fields: [userEmail], references: [email])
+  user         User                   @relation(fields: [userEmail], references: [email])
   transactions Transaction[]
+  progress     FoodDonationProgress[]
+}
+
+enum FoodDonationProgressEnum {
+  POSTED
+  BOOKED
+  PICKED_UP
+}
+
+model FoodDonationProgress {
+  id        String                   @id @default(uuid())
+  status    FoodDonationProgressEnum
+  by        String
+  createdAt DateTime                 @default(now()) @db.Timestamptz()
+  updatedAt DateTime                 @default(now()) @updatedAt @db.Timestamptz()
+
+  foodDonationId String
+  foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id])
 }
 
 model Transaction {
@@ -102,17 +121,24 @@ model MoneyDonation {
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
 
   donorEmail     String
-  donor          User       @relation("donateMoney", fields: [donorEmail], references: [email])
+  donor          User                    @relation("donateMoney", fields: [donorEmail], references: [email])
   recipientEmail String
-  recipient      User       @relation("receiveMoney", fields: [recipientEmail], references: [email])
-  progress       Progress[]
+  recipient      User                    @relation("receiveMoney", fields: [recipientEmail], references: [email])
+  progress       MoneyDonationProgress[]
 }
 
-model Progress {
-  id        String   @id @default(uuid())
-  status    String
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+enum MoneyDonationProgressEnum {
+  PENDING
+  CONFIRMED
+  PURCHASED
+  DISTRIBUTED
+}
+
+model MoneyDonationProgress {
+  id        String                    @id @default(uuid())
+  status    MoneyDonationProgressEnum
+  createdAt DateTime                  @default(now()) @db.Timestamptz()
+  updatedAt DateTime                  @default(now()) @updatedAt @db.Timestamptz()
 
   moneyDonationId String
   moneyDonation   MoneyDonation @relation(fields: [moneyDonationId], references: [id])
