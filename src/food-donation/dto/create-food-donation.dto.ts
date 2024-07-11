@@ -1,4 +1,5 @@
 import { CATEGORY } from '@prisma/client'
+import { Type } from 'class-transformer'
 import {
   IsBoolean,
   IsDate,
@@ -39,6 +40,7 @@ export class CreateFoodDonationDto {
 
   @IsNotEmpty()
   @IsDate()
+  @Type(() => Date)
   expiredDate: Date
 
   @IsNotEmpty()

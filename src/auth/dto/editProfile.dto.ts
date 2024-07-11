@@ -10,6 +10,10 @@ export class EditProfileDTO {
   phone: string
 
   @IsString()
+  @IsNotEmpty()
+  profileImage: string
+
+  @IsString()
   @IsOptional()
   description?: string
 
