@@ -58,14 +58,16 @@ export class MoneyDonationService {
     updateStatusMoneyDonationDto: UpdateStatusMoneyDonationDto
   ) {
     await this.prismaService.$transaction(async (prisma) => {
-      updateStatusMoneyDonationDto.moneyDonationIds.forEach(async (value) => {
-        await prisma.moneyDonationProgress.create({
-          data: {
-            status: updateStatusMoneyDonationDto.status,
-            moneyDonationId: value,
-          },
-        })
-      })
+      await Promise.all(
+        updateStatusMoneyDonationDto.moneyDonationIds.map((value) =>
+          prisma.moneyDonationProgress.create({
+            data: {
+              status: updateStatusMoneyDonationDto.status,
+              moneyDonationId: value,
+            },
+          })
+        )
+      )
     })
   }
 }
