@@ -1,0 +1,9 @@
+node_modules
+dist
+tsconfig.json
+tsconfig-build.json
+.eslintrc.js
+.vscode/*
+yarn.lock
+databases/**/seeders/*
+Dockerfile
