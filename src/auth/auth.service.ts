@@ -211,7 +211,7 @@ export class AuthService {
       html: `
       <p>Verify your account here!</p>
       <strong>
-        <a href="${process.env.CLIENT_URL}/email-verification?token=${token.token}">Click Here</a>
+        <a href="${process.env.CLIENT_URL}/confirmation?token=${token.token}">Click Here</a>
       </strong>
       `,
     })

@@ -21,8 +21,7 @@
     "check-types": "tsc --noEmit",
     "check-format": "prettier --check .",
     "check-lint": "eslint . --ext ts --ext tsx --ext js",
-    "test-all": "npm run format && npm run check-format && npm run check-lint && npm run check-types",
-    "prepare": "husky"
+    "test-all": "npm run format && npm run check-format && npm run check-lint && npm run check-types"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
