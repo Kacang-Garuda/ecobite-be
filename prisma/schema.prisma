@@ -146,23 +146,38 @@ model MoneyDonationProgress {
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  // another attribute
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+  id             String   @id @default(uuid())
+  title          String
+  date           DateTime @db.Timestamptz()
+  city           String
+  location       String
+  description    String
+  jobDescription String
+  benefit        String
+  image          String
+  createdAt      DateTime @default(now()) @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @db.Timestamptz()
 
   registeredUsers RegisteredEvent[]
   userEmail       String
   user            User              @relation(fields: [userEmail], references: [email])
 }
 
+enum RegistEventEnum {
+  PENDING
+  REJECTED
+  ACCEPTED
+}
+
 model RegisteredEvent {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+  id        String          @id @default(uuid())
+  reason    String
+  status    RegistEventEnum @default(PENDING)
+  createdAt DateTime        @default(now()) @db.Timestamptz()
+  updatedAt DateTime        @default(now()) @updatedAt @db.Timestamptz()
 
   eventId   String
-  event     Event  @relation(fields: [eventId], references: [id])
+  event     Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   userEmail String
-  user      User   @relation(fields: [userEmail], references: [email])
+  user      User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
 }

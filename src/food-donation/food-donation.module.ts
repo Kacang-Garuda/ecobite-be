@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { FoodDonationService } from './food-donation.service';
-import { FoodDonationController } from './food-donation.controller';
+import { Module } from '@nestjs/common'
+import { FoodDonationService } from './food-donation.service'
+import { FoodDonationController } from './food-donation.controller'
 
 @Module({
   controllers: [FoodDonationController],
