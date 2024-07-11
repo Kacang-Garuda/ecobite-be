@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email           String   @unique
+  isInstitution   Boolean
+  password        String
+  name            String
+  phone           String
+  description     String?
+  qris            String?
+  isEmailVerified Boolean  @default(false)
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  token            Token[]
+  foodDonations    FoodDonation[]
+  donateFood       Transaction[]     @relation("donateFood")
+  receiveFood      Transaction[]     @relation("receiveFood")
+  donateMoney      MoneyDonation[]   @relation("donateMoney")
+  receiveMoney     MoneyDonation[]   @relation("receiveMoney")
+  events           Event[]
+  registeredEvents RegisteredEvent[]
+}
+
+enum TokenType {
+  AUTHENTICATION
+  VERIFY_EMAIL
+}
+
+model Token {
+  token     String    @unique
+  type      TokenType
+  isExpired Boolean   @default(false)
+  expiredAt DateTime  @db.Timestamptz()
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz()
+
+  userEmail String 
+  user      User   @relation(fields: [userEmail], references: [email])
+}
+
+enum CATEGORY {
+  STAPLES
+  BEVERAGES
+  CONDIMENTS
+  SNACKS
+  CANNED_FOOD
+  DRIED_FOOD
+}
+
+model FoodDonation {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  category      CATEGORY
+  isInstitution Boolean
+  imageUrl      String
+  quantity      Int
+  expiredDate   DateTime @db.Timestamptz()
+  instruction   String
+  location      String
+  createdAt     DateTime @default(now()) @db.Timestamptz()
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  userEmail    String
+  user         User          @relation(fields: [userEmail], references: [email])
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  quantity  Int
+  notes     String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  donorEmail     String
+  donor          User         @relation("donateFood", fields: [donorEmail], references: [email])
+  recipientEmail String
+  recipient      User         @relation("receiveFood", fields: [recipientEmail], references: [email])
+  foodDonationId String
+  foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id])
+}
+
+model MoneyDonation {
+  id        String   @id @default(uuid())
+  payment   String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  donorEmail     String
+  donor          User       @relation("donateMoney", fields: [donorEmail], references: [email])
+  recipientEmail String
+  recipient      User       @relation("receiveMoney", fields: [recipientEmail], references: [email])
+  progress       Progress[]
+}
+
+model Progress {
+  id        String   @id @default(uuid())
+  status    String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  moneyDonationId String
+  moneyDonation   MoneyDonation @relation(fields: [moneyDonationId], references: [id])
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  // another attribute
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  registeredUsers RegisteredEvent[]
+  userEmail       String
+  user            User              @relation(fields: [userEmail], references: [email])
+}
+
+model RegisteredEvent {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+
+  eventId   String
+  event     Event  @relation(fields: [eventId], references: [id])
+  userEmail String
+  user      User   @relation(fields: [userEmail], references: [email])
+}
