@@ -13,7 +13,7 @@ export class ResponseUtil {
       code: code,
       success: code >= 200 && code < 300,
       message: message,
-      data: { ...data },
+      data,
     }
 
     Logger.log(responsePayload, `Response Body`)

@@ -22,6 +22,10 @@ export class RegisterDTO {
   phone: string
 
   @IsString()
+  @IsNotEmpty()
+  profileImage: string
+
+  @IsString()
   @IsOptional()
   description?: string
 

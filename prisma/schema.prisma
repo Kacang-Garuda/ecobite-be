@@ -19,6 +19,7 @@ model User {
   password        String
   name            String
   phone           String
+  profileImage    String
   description     String?
   qris            String?
   isEmailVerified Boolean  @default(false)
