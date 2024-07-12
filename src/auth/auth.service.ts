@@ -163,6 +163,25 @@ export class AuthService {
     return restUser
   }
 
+  async getAnotherUser(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+      include: {
+        foodDonations: true,
+        donateFood: true,
+        receiveFood: true,
+        donateMoney: true,
+        receiveMoney: true,
+        events: true,
+        registeredEvents: true,
+      },
+    })
+
+    const { password: _hidePassword, ...restUser } = user
+
+    return restUser
+  }
+
   async editProfile(editProfileDTO: EditProfileDTO, user: User) {
     const updatedUser = await this.prismaService.user.update({
       where: { email: user.email },

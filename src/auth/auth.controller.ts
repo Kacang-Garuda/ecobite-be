@@ -6,10 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Patch,
+  Param,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { RegisterDTO } from './dto/register.dto'
-import { Public } from '../common/decorators/public.decorator'
+import { Public } from 'src/common/decorators/public.decorator'
 import { LoginDTO } from './dto/login.dto'
 import { GetUser } from 'src/common/decorators/getUser.decorator'
 import { User } from '@prisma/client'
@@ -53,6 +54,16 @@ export class AuthController {
   @Get()
   async getUser(@GetUser() user: User) {
     const result = await this.authService.getUser(user)
+    return this.responseUtil.response({
+      code: 200,
+      data: result,
+    })
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':email')
+  async getAnotherUser(@Param('email') email: string) {
+    const result = await this.authService.getAnotherUser(email)
     return this.responseUtil.response({
       code: 200,
       data: result,
