@@ -73,13 +73,14 @@ export class FoodDonationService {
   async getAllMyFoodDonations(user: User) {
     return await this.prismaService.foodDonation.findMany({
       where: { userEmail: user.email },
+      include: { progress: true },
     })
   }
 
   async getAllMyFoodReceived(user: User) {
     return await this.prismaService.transaction.findMany({
       where: { recipientEmail: user.email },
-      include: { foodDonation: true },
+      include: { foodDonation: { include: { progress: true } } },
     })
   }
 
