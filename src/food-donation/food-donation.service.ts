@@ -30,7 +30,7 @@ export class FoodDonationService {
       })
 
       await prisma.foodDonationProgress.create({
-        data: { status: 'POSTED', by: '', foodDonationId: foodDonation.id },
+        data: { status: 'POSTED', foodDonationId: foodDonation.id },
       })
 
       if (recipientEmail !== 'ALL') {
@@ -49,14 +49,10 @@ export class FoodDonationService {
           data: { remainingQuantity: 0 },
         })
 
-        const recipient = await prisma.user.findUnique({
-          where: { email: recipientEmail },
-        })
-
         await prisma.foodDonationProgress.create({
           data: {
             status: 'BOOKED',
-            by: recipient.name,
+            userEmail: recipientEmail,
             foodDonationId: foodDonation.id,
           },
         })
@@ -191,7 +187,7 @@ export class FoodDonationService {
       await prisma.foodDonationProgress.create({
         data: {
           status: 'BOOKED',
-          by: user.name,
+          userEmail: user.email,
           foodDonationId: foodDonation.id,
         },
       })
@@ -294,7 +290,7 @@ export class FoodDonationService {
       await prisma.foodDonationProgress.create({
         data: {
           status: 'PICKED_UP',
-          by: user.name,
+          userEmail: user.email,
           foodDonationId: foodDonation.id,
         },
       })
@@ -313,7 +309,6 @@ export class FoodDonationService {
   async getAllInstitution() {
     return await this.prismaService.user.findMany({
       where: { isInstitution: true },
-      select: { email: true },
     })
   }
 }

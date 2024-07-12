@@ -26,14 +26,15 @@ model User {
   createdAt       DateTime @default(now()) @db.Timestamptz()
   updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz()
 
-  token            Token[]
-  foodDonations    FoodDonation[]
-  donateFood       Transaction[]     @relation("donateFood")
-  receiveFood      Transaction[]     @relation("receiveFood")
-  donateMoney      MoneyDonation[]   @relation("donateMoney")
-  receiveMoney     MoneyDonation[]   @relation("receiveMoney")
-  events           Event[]
-  registeredEvents RegisteredEvent[]
+  token                Token[]
+  foodDonations        FoodDonation[]
+  donateFood           Transaction[]          @relation("donateFood")
+  receiveFood          Transaction[]          @relation("receiveFood")
+  donateMoney          MoneyDonation[]        @relation("donateMoney")
+  receiveMoney         MoneyDonation[]        @relation("receiveMoney")
+  events               Event[]
+  registeredEvents     RegisteredEvent[]
+  foodDonationProgress FoodDonationProgress[]
 }
 
 enum TokenType {
@@ -92,10 +93,11 @@ enum FoodDonationProgressEnum {
 model FoodDonationProgress {
   id        String                   @id @default(uuid())
   status    FoodDonationProgressEnum
-  by        String
   createdAt DateTime                 @default(now()) @db.Timestamptz()
   updatedAt DateTime                 @default(now()) @updatedAt @db.Timestamptz()
 
+  userEmail      String?
+  User           User?        @relation(fields: [userEmail], references: [email])
   foodDonationId String
   foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id], onDelete: Cascade)
 }
