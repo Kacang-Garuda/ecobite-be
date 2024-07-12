@@ -54,6 +54,20 @@ export class MoneyDonationService {
     })
   }
 
+  async getInstituteDetail(email: string) {
+    const result = await this.prismaService.user.findUnique({
+      where: { email },
+    })
+
+    if (!result.isInstitution) {
+      throw new BadRequestException('User bukan institusi')
+    }
+
+    const { password: _hidePassword, ...restUser } = result
+
+    return restUser
+  }
+
   async updateMoneyDonationProgress(
     updateStatusMoneyDonationDto: UpdateStatusMoneyDonationDto
   ) {

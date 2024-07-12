@@ -7,6 +7,7 @@ import {
   Get,
   Query,
   Patch,
+  Param,
 } from '@nestjs/common'
 import { MoneyDonationService } from './money-donation.service'
 import { CreateMoneyDonationDto } from './dto/create-money-donation.dto'
@@ -47,6 +48,17 @@ export class MoneyDonationController {
       user,
       filter
     )
+
+    return this.responseUtil.response({
+      code: 200,
+      data: result,
+    })
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':email')
+  async getInstituteDetail(@Param('email') email: string) {
+    const result = await this.moneyDonationService.getInstituteDetail(email)
 
     return this.responseUtil.response({
       code: 200,
