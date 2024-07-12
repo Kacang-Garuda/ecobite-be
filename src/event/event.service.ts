@@ -23,7 +23,9 @@ export class EventService {
   }
 
   async getAllEvents() {
-    return await this.prismaService.event.findMany()
+    return await this.prismaService.event.findMany({
+      include: { registeredUsers: true },
+    })
   }
 
   async getEvent(id: string) {
