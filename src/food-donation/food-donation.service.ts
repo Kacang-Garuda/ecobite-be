@@ -309,4 +309,11 @@ export class FoodDonationService {
       })
     })
   }
+
+  async getAllInstitution() {
+    return await this.prismaService.user.findMany({
+      where: { isInstitution: true },
+      select: { email: true },
+    })
+  }
 }

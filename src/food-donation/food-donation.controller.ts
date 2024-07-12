@@ -76,6 +76,17 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('institution')
+  async getAllInstitution() {
+    const result = await this.foodDonationService.getAllInstitution()
+
+    return this.responseUtil.response({
+      code: 200,
+      data: result,
+    })
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getFoodDonation(@Param('id') id: string) {
     const result = await this.foodDonationService.getFoodDonation(id)
