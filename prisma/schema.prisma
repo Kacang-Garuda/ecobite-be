@@ -97,15 +97,16 @@ model FoodDonationProgress {
   updatedAt DateTime                 @default(now()) @updatedAt @db.Timestamptz()
 
   foodDonationId String
-  foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id])
+  foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
-  id        String   @id @default(uuid())
-  quantity  Int
-  notes     String
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz()
+  id         String   @id @default(uuid())
+  quantity   Int
+  notes      String
+  isPickedUp Boolean  @default(false)
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz()
 
   donorEmail     String
   donor          User         @relation("donateFood", fields: [donorEmail], references: [email])

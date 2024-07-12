@@ -54,7 +54,7 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Get('my-donation')
   async getAllMyFoodDonations(@GetUser() user: User) {
     const result = await this.foodDonationService.getAllMyFoodDonations(user)
 
@@ -65,7 +65,7 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Get('my-received')
   async getAllMyFoodReceived(@GetUser() user: User) {
     const result = await this.foodDonationService.getAllMyFoodReceived(user)
 
@@ -142,7 +142,7 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Patch(':id')
+  @Patch('book/:id')
   async updateBookedFoodDonation(
     @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto
@@ -159,7 +159,7 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete(':id')
+  @Delete('book/:id')
   async deleteBookedFoodDonation(@Param('id') id: string) {
     await this.foodDonationService.deleteBookedFoodDonation(id)
 
@@ -170,7 +170,7 @@ export class FoodDonationController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Patch(':foodDonationId')
+  @Patch('picked-up/:foodDonationId')
   async pickedUpFoodDonationProgress(
     @Param('foodDonationId') foodDonationId: string,
     @GetUser() user: User

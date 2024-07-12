@@ -71,9 +71,8 @@ export class FoodDonationService {
   }
 
   async getAllMyFoodDonations(user: User) {
-    return await this.prismaService.transaction.findMany({
-      where: { donorEmail: user.email },
-      include: { foodDonation: true },
+    return await this.prismaService.foodDonation.findMany({
+      where: { userEmail: user.email },
     })
   }
 
@@ -85,7 +84,10 @@ export class FoodDonationService {
   }
 
   async getFoodDonation(id: string) {
-    return await this.prismaService.foodDonation.findUnique({ where: { id } })
+    return await this.prismaService.foodDonation.findUnique({
+      where: { id },
+      include: { progress: true },
+    })
   }
 
   async updateFoodDonation(
@@ -95,6 +97,10 @@ export class FoodDonationService {
     const foodDonation = await this.prismaService.foodDonation.findUnique({
       where: { id },
     })
+
+    if (!foodDonation) {
+      throw new BadRequestException('Oops, donasi tidak ditemukan')
+    }
 
     const bookedFoodDonation =
       foodDonation.quantity - foodDonation.remainingQuantity
@@ -140,6 +146,14 @@ export class FoodDonationService {
       const foodDonation = await prisma.foodDonation.findUnique({
         where: { id: foodDonationId },
       })
+
+      if (!foodDonation) {
+        throw new BadRequestException('Oops, donasi tidak ditemukan')
+      }
+
+      if (user.email === foodDonation.userEmail) {
+        throw new BadRequestException('Tidak dapat memesan donasi sendiri!')
+      }
 
       if (createTransactionDto.quantity > foodDonation.remainingQuantity) {
         throw new BadRequestException(
@@ -196,13 +210,22 @@ export class FoodDonationService {
         where: { id },
       })
 
+      if (!bookedFoodDonation) {
+        throw new BadRequestException('Oops, pesanan tidak ditemukan')
+      }
+
       const foodDonation = await prisma.foodDonation.findUnique({
         where: { id: bookedFoodDonation.foodDonationId },
       })
 
+      if (!foodDonation) {
+        throw new BadRequestException('Oops, donasi tidak ditemukan')
+      }
+
       if (
         updateTransactionDto.quantity &&
-        updateTransactionDto.quantity > foodDonation.remainingQuantity
+        updateTransactionDto.quantity >
+          foodDonation.remainingQuantity + bookedFoodDonation.quantity
       ) {
         throw new BadRequestException(
           `Tidak dapat mengubah pesanan. Donasi tersisa ${foodDonation.remainingQuantity}.`
@@ -235,6 +258,10 @@ export class FoodDonationService {
         where: { id },
       })
 
+      if (!bookedFoodDonation) {
+        throw new BadRequestException('Oops, pesanan tidak ditemukan')
+      }
+
       await prisma.foodDonation.update({
         where: { id: bookedFoodDonation.foodDonationId },
         data: { remainingQuantity: { increment: bookedFoodDonation.quantity } },
@@ -249,12 +276,36 @@ export class FoodDonationService {
       where: { id: foodDonationId },
     })
 
-    await this.prismaService.foodDonationProgress.create({
-      data: {
-        status: 'PICKED_UP',
-        by: user.name,
-        foodDonationId: foodDonation.id,
-      },
+    if (!foodDonation) {
+      throw new BadRequestException('Oops, donasi tidak ditemukan')
+    }
+
+    const previousPickedUpProgress =
+      await this.prismaService.foodDonationProgress.findFirst({
+        where: { status: 'PICKED_UP' },
+      })
+
+    if (previousPickedUpProgress) {
+      throw new BadRequestException('Pesanan sudah dipickup')
+    }
+
+    await this.prismaService.$transaction(async (prisma) => {
+      await prisma.foodDonationProgress.create({
+        data: {
+          status: 'PICKED_UP',
+          by: user.name,
+          foodDonationId: foodDonation.id,
+        },
+      })
+
+      const transaction = await prisma.transaction.findFirst({
+        where: { recipientEmail: user.email, foodDonationId },
+      })
+
+      await prisma.transaction.update({
+        where: { id: transaction.id },
+        data: { isPickedUp: true },
+      })
     })
   }
 }
