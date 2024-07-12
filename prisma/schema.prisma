@@ -97,7 +97,7 @@ model FoodDonationProgress {
   updatedAt DateTime                 @default(now()) @updatedAt @db.Timestamptz()
 
   userEmail      String?
-  User           User?        @relation(fields: [userEmail], references: [email])
+  user           User?        @relation(fields: [userEmail], references: [email])
   foodDonationId String
   foodDonation   FoodDonation @relation(fields: [foodDonationId], references: [id], onDelete: Cascade)
 }
