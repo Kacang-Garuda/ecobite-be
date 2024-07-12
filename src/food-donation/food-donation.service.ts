@@ -282,7 +282,7 @@ export class FoodDonationService {
 
     const previousPickedUpProgress =
       await this.prismaService.foodDonationProgress.findFirst({
-        where: { status: 'PICKED_UP' },
+        where: { status: 'PICKED_UP', foodDonationId },
       })
 
     if (previousPickedUpProgress) {
