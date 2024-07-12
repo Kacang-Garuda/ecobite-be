@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { RegisterDTO } from './dto/register.dto'
-import { Public } from 'src/common/decorators/public.decorator'
+import { Public } from '../common/decorators/public.decorator'
 import { LoginDTO } from './dto/login.dto'
 import { GetUser } from 'src/common/decorators/getUser.decorator'
 import { User } from '@prisma/client'
