@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Request } from 'express'
-import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator'
-import { EncryptionUtil } from 'src/common/utils/encryption.util'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { IS_PUBLIC_KEY } from '../common/decorators/public.decorator'
+import { EncryptionUtil } from '../common/utils/encryption.util'
+import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class AuthGuard implements CanActivate {

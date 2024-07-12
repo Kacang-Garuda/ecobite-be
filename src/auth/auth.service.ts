@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { RegisterDTO } from './dto/register.dto'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service'
 import { compare, hash } from 'bcrypt'
-import { EncryptionUtil } from 'src/common/utils/encryption.util'
+import { EncryptionUtil } from '../common/utils/encryption.util'
 import { LoginDTO } from './dto/login.dto'
 import { User } from '@prisma/client'
 import { EditProfileDTO } from './dto/editProfile.dto'
-import { MailerService } from 'src/mailer/mailer.service'
+import { MailerService } from '../mailer/mailer.service'
 import { VerifyEmailDTO } from './dto/verifyEmail.dto'
 
 @Injectable()

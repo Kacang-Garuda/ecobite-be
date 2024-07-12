@@ -10,9 +10,9 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 import { FoodDonationService } from './food-donation.service'
-import { ResponseUtil } from 'src/common/utils/response.util'
+import { ResponseUtil } from '../common/utils/response.util'
 import { CreateFoodDonationDto } from './dto/create-food-donation.dto'
-import { GetUser } from 'src/common/decorators/getUser.decorator'
+import { GetUser } from '../common/decorators/getUser.decorator'
 import { User } from '@prisma/client'
 import { UpdateFoodDonationDto } from './dto/update-food-donation.dto'
 import { CreateTransactionDto } from './dto/create-transaction.dto'

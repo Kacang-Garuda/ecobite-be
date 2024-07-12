@@ -3,7 +3,7 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service'
 import { CreateFoodDonationDto } from './dto/create-food-donation.dto'
 import { User } from '@prisma/client'
 import { UpdateFoodDonationDto } from './dto/update-food-donation.dto'

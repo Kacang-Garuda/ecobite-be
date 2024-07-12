@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateMoneyDonationDto } from './dto/create-money-donation.dto'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service'
 import { User } from '@prisma/client'
 import { FilterGetMoneyDonationReceived } from './dto/filter.dto'
 import { UpdateStatusMoneyDonationDto } from './dto/update-status.dto'
