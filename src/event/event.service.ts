@@ -86,8 +86,6 @@ export class EventService {
   }
 
   async getAllMyVolunteers(user: User) {
-    console.log('AHELAH')
-
     return await this.prismaService.registeredEvent.findMany({
       where: { userEmail: user.email },
       include: { event: true },
