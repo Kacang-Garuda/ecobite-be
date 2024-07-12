@@ -83,7 +83,7 @@ export class FoodDonationService {
   async getFoodDonation(id: string) {
     return await this.prismaService.foodDonation.findUnique({
       where: { id },
-      include: { progress: true },
+      include: { progress: { include: { user: true } } },
     })
   }
 
