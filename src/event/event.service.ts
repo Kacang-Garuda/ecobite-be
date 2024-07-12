@@ -31,7 +31,7 @@ export class EventService {
   async getEvent(id: string) {
     return await this.prismaService.event.findUnique({
       where: { id },
-      include: { registeredUsers: true, user: true },
+      include: { registeredUsers: { include: { user: true } }, user: true },
     })
   }
 
