@@ -52,6 +52,7 @@ export class FoodDonationService {
         await prisma.foodDonationProgress.create({
           data: {
             status: 'BOOKED',
+            quantity: createDto.quantity,
             userEmail: recipientEmail,
             foodDonationId: foodDonation.id,
           },
@@ -187,6 +188,7 @@ export class FoodDonationService {
       await prisma.foodDonationProgress.create({
         data: {
           status: 'BOOKED',
+          quantity: createTransactionDto.quantity,
           userEmail: user.email,
           foodDonationId: foodDonation.id,
         },

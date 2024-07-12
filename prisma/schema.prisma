@@ -93,6 +93,7 @@ enum FoodDonationProgressEnum {
 model FoodDonationProgress {
   id        String                   @id @default(uuid())
   status    FoodDonationProgressEnum
+  quantity  Int?
   createdAt DateTime                 @default(now()) @db.Timestamptz()
   updatedAt DateTime                 @default(now()) @updatedAt @db.Timestamptz()
 
