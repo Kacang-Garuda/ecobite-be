@@ -51,6 +51,17 @@ export class EventController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('volunteer')
+  async getAllMyVolunteers(@GetUser() user: User) {
+    const result = await this.eventService.getAllMyVolunteers(user)
+
+    return this.responseUtil.response({
+      code: 200,
+      data: result,
+    })
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getEvent(@Param('id') id: string) {
     const result = await this.eventService.getEvent(id)

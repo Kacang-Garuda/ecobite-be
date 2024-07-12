@@ -42,6 +42,22 @@ export class EventService {
   }
 
   async registEvent(registEventDto: RegistEventDto, user: User) {
+    const registeredEvent = await this.prismaService.registeredEvent.findFirst({
+      where: { userEmail: user.email, eventId: registEventDto.eventId },
+    })
+
+    if (registeredEvent) {
+      throw new BadRequestException('Anda sudah mendaftar acara ini.')
+    }
+
+    const event = await this.prismaService.event.findUnique({
+      where: { id: registEventDto.eventId },
+    })
+
+    if (event.userEmail === user.email) {
+      throw new BadRequestException('Tidak bisa mendaftar ke acara sendiri.')
+    }
+
     return await this.prismaService.registeredEvent.create({
       data: { userEmail: user.email, ...registEventDto },
     })
@@ -61,6 +77,15 @@ export class EventService {
     await this.prismaService.registeredEvent.update({
       where: { id },
       data: { status: updateVolunteerDto.isAccepted ? 'ACCEPTED' : 'REJECTED' },
+    })
+  }
+
+  async getAllMyVolunteers(user: User) {
+    console.log('AHELAH')
+
+    return await this.prismaService.registeredEvent.findMany({
+      where: { userEmail: user.email },
+      include: { event: true },
     })
   }
 }
